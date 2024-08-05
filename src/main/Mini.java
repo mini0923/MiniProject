@@ -7,23 +7,26 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Scanner;
 
-public class Quiz1 {
+public class Mini {
 
-	static int count = 1;	// 회원번호 static 변수
 	
+	static int count = 1;
+
 	public static void main(String[] args) throws IOException {
+		ArrayList<Order> list = new ArrayList<>();
+		 
+		OrderStart oS = new OrderStart();
+		OrderHistory oH = new OrderHistory();
+		OrderByCustomer oBC = new OrderByCustomer();
+		SpecialHisory sH = new SpecialHisory();
+		
+		Scanner scanner = new Scanner(System.in);
 		
 		FileWriter fw = new FileWriter("order.txt");
 		PrintWriter pw = new PrintWriter(fw);
-		Scanner scanner = new Scanner(System.in);
-		
-		getOrderStart(pw, scanner);
-			
-	}
-	
-	public static void getOrderStart(PrintWriter pw ,Scanner scanner) throws IOException {
 		
 		while (true) {
 			System.out.println("전화 상담 할당 방식을 선택하세요");		
@@ -37,20 +40,20 @@ public class Quiz1 {
 			int num = scanner.nextInt();
 			
 			if (num == 1) {
-				getNextOrder(pw, scanner);
+				oS.nextOrder(pw, scanner, list);
 				count++;
 				continue;
 			} 
 			else if (num == 2) {
-				getOrderHistory();
+				oH.orderHistory();;
 				continue;
 			}
 			else if (num == 3) {
-				getOrderByCustomer(scanner);
+				oBC.orderByCustomer(scanner);
 				continue;
 			} 
 			else if (num == 4) {
-				getSpecialHistory(scanner);
+				sH.specialHistory(scanner);
 				continue;
 			}
 			else if (num == 5) {
@@ -64,42 +67,126 @@ public class Quiz1 {
 		}
 		scanner.close();
 	}
+}
+
+class Order {
 	
-	public static void getNextOrder(PrintWriter pw, Scanner scanner) throws IOException {
+	String name;
+	String productName ;
+	int quantity ; 
+	int price;
+	LocalDateTime curDateTime = LocalDateTime.now();
+	DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+	String formatDate = curDateTime.format(formatter);
+
+	public Order(String name, String productName, int quantity, int price, String formatDate) {
+		super();
+		this.name = name;
+		this.productName = productName;
+		this.quantity = quantity;
+		this.price = price;
+	}
+
 	
+	
+	@Override
+	public String toString() {
+		return "Order [name=" + name + ", productName=" + productName + ", quantity=" + quantity + ", price=" + price
+				+ ", formatDate=" + formatDate + "]";
+	}
+	
+}
+
+class OrderStart {
+	public static void nextOrder(PrintWriter pw ,Scanner scanner, ArrayList<Order> list) {
+
 		String name;
-		String productName ;
-		int quantity ; 
+		String productName;
+		int quantity;
 		int price;
-
-		System.out.print("고객명 : ");
-		scanner.nextLine();
-		name = scanner.nextLine();
-
-		System.out.print("제품명 : ");
-		productName = scanner.nextLine();
-		
-		System.out.print("제품의 수량: ");
-		quantity = scanner.nextInt();
-		
-		System.out.print("제품의 가격 : ");
-		price = scanner.nextInt();
-		
 		LocalDateTime curDateTime = LocalDateTime.now();
+		
+		scanner.nextLine();
+
+		while (true) {
+			System.out.print("고객명 : ");
+			name = scanner.nextLine();
+			
+			if (name.isEmpty()) {
+				System.out.println("고객명을 입력해주세요.");
+			} else {
+				break;
+			}
+		}
+		
+		
+		while (true) {
+			System.out.print("제품명 : ");
+			productName = scanner.nextLine();
+			
+			if (productName.isEmpty()) {
+				System.out.println("제품명을 입력해주세요.");
+			} else {
+				break;
+			}
+		}
+		
+
+		while (true) {
+			System.out.print("제품의 수량: ");
+			
+			if (scanner.hasNextInt()) {
+				quantity = scanner.nextInt();
+
+				if (quantity <= 0) {
+					System.out.println("수량을 제대로 입력해주세요.");
+					continue;
+				} else {
+					break;
+				}
+			}else {
+				System.out.println("수량은 숫자를 입력해주세요.");
+				scanner.next();
+			}
+		}
+		
+		
+		while (true) {
+			System.out.print("제품의 가격 : ");
+			
+			if (scanner.hasNextInt()) {
+				price = scanner.nextInt();
+
+				if (quantity <= 0) {
+					System.out.println("가격을 제대로 입력해주세요.");
+				} else {
+					break;
+				}
+			}else {
+				System.out.println("가격은 숫자를 입력해주세요.");
+				scanner.next();
+			}
+		}
+		
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 		String formatDate = curDateTime.format(formatter);
 		
-		String str = String.format("주문번호 : %d, 고객명 : %s, 제품명 : %s, 제품의 수량 : %d, 제품의 가격 : %d, 주문일시 : %s", count, name, productName, quantity, price, formatDate);
+		list.add(new Order(name, productName, quantity, price, formatDate));
 		
+		String str = String.format("주문번호 : %d, 고객명 : %s, 제품명 : %s, 제품의 수량 : %d, 제품의 가격 : %d, 주문일시 : %s", Mini.count, name, productName, quantity, price, formatDate);
+
 		pw.println(str);
-		
+								
 		pw.flush();
+		
 	}
+}
+
+class OrderHistory {
 	
-	public static void getOrderHistory() throws IOException {
+	public static void orderHistory() throws IOException {
 		FileReader fr = new FileReader("order.txt");
 		BufferedReader br = new BufferedReader(fr);
-		
 		System.out.println("==================================주문이력==================================");
 		
 		while (true) {
@@ -112,8 +199,11 @@ public class Quiz1 {
 		System.out.println("=========================================================================");
 
 	}
+}
+
+class OrderByCustomer {
 	
-	public static void getOrderByCustomer(Scanner scanner) throws IOException {
+	public static void orderByCustomer(Scanner scanner) throws IOException {
 		FileReader fr = new FileReader("order.txt");
 		BufferedReader br = new BufferedReader(fr);
 		
@@ -137,18 +227,22 @@ public class Quiz1 {
 			
 			String nameArr2[] = nameArr[1].split(":");
 			
+			String quanArr[] =  nameArr[3].split(":");
+			
 			String priceArr[] = nameArr[4].split(":");
 			
 			
 				if (nameArr2[1].trim().equals(name)) {
-					totalPrice +=  Integer.parseInt(priceArr[1].trim());	// 전체 주문 금액
+					totalPrice +=  Integer.parseInt(quanArr[1].trim()) * Integer.parseInt(priceArr[1].trim());	// 전체 주문 금액
 					totalQuantity++;
 				}
 			}
 
 		if (totalQuantity > 0) {
+			
 		System.out.print("전체 주문 건수 :");
 		System.out.println(totalQuantity);
+		
 		System.out.print("전체 주문 금액 :");
 		System.out.println(totalPrice);
 		}else {
@@ -156,8 +250,11 @@ public class Quiz1 {
 		}
 		System.out.println("=============================================================================");
 	}
+}
+
+class SpecialHisory {
 	
-	public static void getSpecialHistory(Scanner scanner) throws IOException {
+	public static void specialHistory(Scanner scanner) throws IOException {
 		FileReader fr = new FileReader("order.txt");
 		BufferedReader br = new BufferedReader(fr);
 	
@@ -184,4 +281,5 @@ public class Quiz1 {
 		System.out.println("=============================================================================");
 		
 	}
+	
 }
