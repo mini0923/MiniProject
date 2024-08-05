@@ -140,7 +140,7 @@ class OrderStart {
 
 				if (quantity <= 0) {
 					System.out.println("수량을 제대로 입력해주세요.");
-					continue;
+					scanner.next();
 				} else {
 					break;
 				}
