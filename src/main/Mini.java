@@ -11,20 +11,20 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Mini {
-
 	
 	static int count = 1;
 
 	public static void main(String[] args) throws IOException {
 		ArrayList<Order> list = new ArrayList<>();
+		Scanner scanner = new Scanner(System.in);
 		 
 		OrderStart oS = new OrderStart();
 		OrderHistory oH = new OrderHistory();
-	
-		Scanner scanner = new Scanner(System.in);
-		
-		FileWriter fw = new FileWriter("order.txt");
+
+		FileWriter fw = new FileWriter("order.txt" , true);
 		PrintWriter pw = new PrintWriter(fw);
+		
+		orderNum(scanner);
 		
 		while (true) {
 			System.out.println("전화 상담 할당 방식을 선택하세요");		
@@ -41,29 +41,48 @@ public class Mini {
 				oS.nextOrder(pw, scanner, list);
 				count++;
 				continue;
-			} 
-			else if (num == 2) {
+			} 	else if (num == 2) {
 				oH.orderHistory();;
 				continue;
-			}
-			else if (num == 3) {
+			}	else if (num == 3) {
 				oH.orderByCustomer(scanner);
 				continue;
-			} 
-			else if (num == 4) {
+			} 	else if (num == 4) {
 				oH.specialHistory(scanner);
 				continue;
-			}
-			else if (num == 5) {
+			}	else if (num == 5) {
 				System.out.println("프로그램을 종료합니다");
 				break;
-			} 
-			else {
+			} 	else {
 				System.out.println("잘못된 숫자입니다. 1~5 까지 입력해주세요");
 				continue;
 			}
 		}
 		scanner.close();
+	}
+	
+	// count 중복 피하는 함수
+	public static void orderNum(Scanner scanner) throws IOException {
+		
+		FileReader fr = new FileReader("order.txt");
+		BufferedReader br = new BufferedReader(fr);
+		
+		while (true) {
+			String str = br.readLine();
+			if (str == null) {
+				break;
+			}
+			String numArr[] = str.split(",");
+			
+			String numArr2[] = numArr[0].split(":");
+			
+			int num = Integer.parseInt(numArr2[1].trim());
+			if(num >= 1) {
+				count++;
+			}	
+		}
+		br.close();
+
 	}
 }
 
