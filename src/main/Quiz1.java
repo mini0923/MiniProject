@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Arrays;
 import java.util.Scanner;
 
 public class Quiz1 {
@@ -25,6 +24,7 @@ public class Quiz1 {
 	}
 	
 	public static void getOrderStart(PrintWriter pw ,Scanner scanner) throws IOException {
+		
 		while (true) {
 			System.out.println("전화 상담 할당 방식을 선택하세요");		
 			System.out.println("1: 상품 주문하기");
@@ -127,7 +127,6 @@ public class Quiz1 {
 		name = scanner.nextLine();
 		
 		System.out.println("==================================고객별 주문이력==================================");
-
 		while (true) {
 			String str = br.readLine();
 			if (str == null) {
@@ -155,7 +154,7 @@ public class Quiz1 {
 		}else {
 			System.out.println("해당 고객의 주문이 없습니다.");
 		}
-		System.out.println("=================================================================================");
+		System.out.println("=============================================================================");
 	}
 	
 	public static void getSpecialHistory(Scanner scanner) throws IOException {
@@ -166,6 +165,7 @@ public class Quiz1 {
 		System.out.println("날짜 : ");
 		String SearchDate = scanner.nextLine();
 		
+		System.out.println("==================================고객별 주문이력==================================");
 		while (true) {
 			String str = br.readLine();
 			if (str == null) {
@@ -174,17 +174,14 @@ public class Quiz1 {
 			
 			String dateArr[] = str.split(",");
 			String dateArr2[] = dateArr[5].split(":");
-			System.out.println("==================================고객별 주문이력==================================");
 
 			if (dateArr2[1].trim().contains(SearchDate)) {
 				System.out.println(str);
-			}else {
+			} else {
 				System.out.println("특정 날짜에는 정보가 없습니다.");
 			}
-			System.out.println("=================================================================================");
-
-			
 		}
+		System.out.println("=============================================================================");
 		
 	}
 }
