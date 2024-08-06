@@ -77,6 +77,7 @@ public class Mini {
 			String numArr2[] = numArr[0].split(":");
 			
 			int num = Integer.parseInt(numArr2[1].trim());
+			
 			if(num >= 1) {
 				count++;
 			}	
@@ -293,7 +294,7 @@ class OrderHistory {
 			if (dateArr2[1].trim().contains(SearchDate)) {
 				System.out.println(str);
 			} else {
-				System.out.println("특정 날짜에는 정보가 없습니다.");
+				
 			}
 		}
 		System.out.println("=============================================================================");
